@@ -3,8 +3,10 @@ import nz.sodium.StreamSink;
 import nz.sodium.Unit;
 import nz.sodium.time.SecondsTimerSystem;
 import nz.sodium.time.TimerSystem;
+import swidgets.SLabel;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
@@ -20,9 +22,18 @@ public class Main {
         TimerSystem timerSystem = new SecondsTimerSystem();
         Cell<Double> time = timerSystem.time;
 
-        // ADD YOUR LOGIC HERE
-        // i.e.: A LABEL FOR SPEED, DISTANCE AND PASSED SECONDS FOR AN OBJECT IN FREE FALL
+        //v(t) = g*t
+        Cell<Double> velocity = time.map(seconds -> 9.81 * seconds);
+        //s(t) = 1/2 * g * t^2
+        Cell<Double> distance = time.map(seconds -> 0.5 * 9.81 * seconds * seconds);
 
+        SLabel lblSeconds = new SLabel(time.map(value -> Double.toString(value) + " s"));
+        SLabel lblSpeed = new SLabel(velocity.map(value -> Double.toString(value) + " m/s"));
+        SLabel lblDistance = new SLabel(distance.map(value -> Double.toString(value) + " m"));
+
+        frame.add(lblSeconds);
+        frame.add(lblSpeed);
+        frame.add(lblDistance);
 
         frame.setSize(400, 160);
         frame.setVisible(true);
